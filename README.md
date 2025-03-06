@@ -54,3 +54,245 @@ A collection of OpenGL source codes showcasing various real-time rendering techn
 - **Object Customization**: Configurable shapes and colors for inner and outer orbit objects.
 
 ---
+---
+---
+
+### **1. Understanding OpenGL Coordinate System**
+OpenGL uses a **Cartesian coordinate system** with the **origin (0,0,0)** at the center of the screen. The coordinates are:
+- **X-axis** (left to right): -1.0 to 1.0
+- **Y-axis** (bottom to top): -1.0 to 1.0
+- **Z-axis** (into and out of the screen): -1.0 to 1.0 (for 3D)
+
+**Example:**
+```
+(-1,  1)       (0,  1)       (1,  1)
+      +-----------+-----------+
+      |           |           |
+(-1,  0) |  (0,0) | (1,  0)
+      |           |           |
+      +-----------+-----------+
+(-1, -1)       (0, -1)      (1, -1)
+```
+- **(0, 1, 0)** → Top-center
+- **(-1, -1, 0)** → Bottom-left
+- **(1, -1, 0)** → Bottom-right
+
+---
+
+### **2. `display()` Function Breakdown**
+Your `display()` function follows these steps:
+
+#### **Step 1: Clear the Screen**
+```cpp
+glClear(GL_COLOR_BUFFER_BIT);
+```
+- **`glClear(GL_COLOR_BUFFER_BIT);`** → Clears the color buffer to prepare for new drawing.
+
+#### **Step 2: Start Drawing a Triangle**
+```cpp
+glBegin(GL_TRIANGLES);
+```
+- **`glBegin(GL_TRIANGLES);`** → Tells OpenGL that we are drawing triangles.
+
+#### **Step 3: Define the Triangle Vertices**
+Each **`glVertex3f(x, y, z)`** defines a point in **3D space**.
+
+```cpp
+// Apex (Top)
+glColor3f(1.0f, 0.0f, 0.0f);
+glVertex3f(0.0, 1.0, 0.0);
+```
+- **`glColor3f(1.0, 0.0, 0.0);`** → Sets color to **Red**.
+- **`glVertex3f(0.0, 1.0, 0.0);`** → Places a vertex at the top.
+
+```cpp
+// Left Bottom
+glColor3f(0.0f, 1.0f, 0.0f);
+glVertex3f(-1.0, -1.0, 0.0);
+```
+- **`glColor3f(0.0, 1.0, 0.0);`** → Sets color to **Green**.
+- **`glVertex3f(-1.0, -1.0, 0.0);`** → Places a vertex at the **bottom-left**.
+
+```cpp
+// Right Bottom
+glColor3f(0.0f, 0.0f, 1.0f);
+glVertex3f(1.0, -1.0, 0.0);
+```
+- **`glColor3f(0.0, 0.0, 1.0);`** → Sets color to **Blue**.
+- **`glVertex3f(1.0, -1.0, 0.0);`** → Places a vertex at the **bottom-right**.
+
+#### **Step 4: End Drawing**
+```cpp
+glEnd();
+```
+- **`glEnd();`** → Tells OpenGL that we have finished defining the triangle.
+
+#### **Step 5: Swap Buffers**
+```cpp
+SwapBuffers(ghdc);
+```
+- **`SwapBuffers(ghdc);`** → Swaps the back buffer with the front buffer to display the rendered image (Double Buffering).
+
+---
+---
+---
+
+## **1. OpenGL Coordinate System Recap**
+OpenGL uses a **Cartesian coordinate system** where:  
+- The **origin (0,0,0)** is in the center of the screen.  
+- The **X-axis** goes **left (-1.0) to right (+1.0)**.  
+- The **Y-axis** goes **bottom (-1.0) to top (+1.0)**.  
+- The **Z-axis** goes **into (-1.0) and out (+1.0) of the screen** (used in 3D).  
+
+---
+
+## **2. Drawing Basic Shapes**
+### **A) Drawing a Triangle**
+#### **Vertices of a Triangle**
+A **triangle** has **3 vertices**, and we define them in OpenGL using `glVertex3f(x, y, z)`.  
+
+**Example:**  
+Let's draw a triangle with these points:  
+- **Top vertex:** (0.0, 1.0, 0.0) → Center-top  
+- **Bottom-left vertex:** (-1.0, -1.0, 0.0) → Left-bottom  
+- **Bottom-right vertex:** (1.0, -1.0, 0.0) → Right-bottom  
+
+**Code:**
+```cpp
+glBegin(GL_TRIANGLES);  // Start drawing a triangle
+
+// Top Vertex (Red)
+glColor3f(1.0f, 0.0f, 0.0f);
+glVertex3f(0.0, 1.0, 0.0);
+
+// Bottom Left Vertex (Green)
+glColor3f(0.0f, 1.0f, 0.0f);
+glVertex3f(-1.0, -1.0, 0.0);
+
+// Bottom Right Vertex (Blue)
+glColor3f(0.0f, 0.0f, 1.0f);
+glVertex3f(1.0, -1.0, 0.0);
+
+glEnd();  // End drawing
+```
+
+### **B) Drawing a Square**
+#### **Vertices of a Square**
+A **square** has **4 vertices**, and we can draw it using `GL_QUADS`.  
+
+**Example:**  
+- **Top-left corner:** (-0.5, 0.5, 0.0)  
+- **Top-right corner:** (0.5, 0.5, 0.0)  
+- **Bottom-right corner:** (0.5, -0.5, 0.0)  
+- **Bottom-left corner:** (-0.5, -0.5, 0.0)  
+
+**Code:**
+```cpp
+glBegin(GL_QUADS);  // Start drawing a square
+
+// Top Left (Red)
+glColor3f(1.0f, 0.0f, 0.0f);
+glVertex3f(-0.5, 0.5, 0.0);
+
+// Top Right (Green)
+glColor3f(0.0f, 1.0f, 0.0f);
+glVertex3f(0.5, 0.5, 0.0);
+
+// Bottom Right (Blue)
+glColor3f(0.0f, 0.0f, 1.0f);
+glVertex3f(0.5, -0.5, 0.0);
+
+// Bottom Left (Yellow)
+glColor3f(1.0f, 1.0f, 0.0f);
+glVertex3f(-0.5, -0.5, 0.0);
+
+glEnd();  // End drawing
+```
+
+### **C) Drawing a Rectangle**
+A **rectangle** is similar to a **square** but with different width and height.  
+- We use `GL_QUADS` to connect **4 vertices**.
+
+**Example:**  
+- **Top-left corner:** (-0.8, 0.5, 0.0)  
+- **Top-right corner:** (0.8, 0.5, 0.0)  
+- **Bottom-right corner:** (0.8, -0.5, 0.0)  
+- **Bottom-left corner:** (-0.8, -0.5, 0.0)  
+
+**Code:**
+```cpp
+glBegin(GL_QUADS);  // Start drawing a rectangle
+
+// Top Left
+glColor3f(1.0f, 0.0f, 0.0f);
+glVertex3f(-0.8, 0.5, 0.0);
+
+// Top Right
+glColor3f(0.0f, 1.0f, 0.0f);
+glVertex3f(0.8, 0.5, 0.0);
+
+// Bottom Right
+glColor3f(0.0f, 0.0f, 1.0f);
+glVertex3f(0.8, -0.5, 0.0);
+
+// Bottom Left
+glColor3f(1.0f, 1.0f, 0.0f);
+glVertex3f(-0.8, -0.5, 0.0);
+
+glEnd();  // End drawing
+```
+
+### **D) Drawing a Pentagon (5-sided shape)**
+A **pentagon** has **5 vertices**. We use `GL_POLYGON` to draw it.
+
+**Example Coordinates:**
+```
+       (0, 0.8)   --> Top
+ (-0.8, 0.3)  (0.8, 0.3) --> Top Left & Top Right
+(-0.5, -0.5) (0.5, -0.5) --> Bottom Left & Bottom Right
+```
+
+**Code:**
+```cpp
+glBegin(GL_POLYGON);  // Start drawing a Pentagon
+
+// Top Vertex
+glColor3f(1.0f, 0.0f, 0.0f);
+glVertex3f(0.0, 0.8, 0.0);
+
+// Top Left
+glColor3f(0.0f, 1.0f, 0.0f);
+glVertex3f(-0.8, 0.3, 0.0);
+
+// Bottom Left
+glColor3f(0.0f, 0.0f, 1.0f);
+glVertex3f(-0.5, -0.5, 0.0);
+
+// Bottom Right
+glColor3f(1.0f, 1.0f, 0.0f);
+glVertex3f(0.5, -0.5, 0.0);
+
+// Top Right
+glColor3f(0.0f, 1.0f, 1.0f);
+glVertex3f(0.8, 0.3, 0.0);
+
+glEnd();  // End drawing
+```
+
+---
+
+## **3. How to Assign Coordinates Correctly?**
+### **Understanding the Screen Space**
+1. **Keep the coordinates within (-1.0 to 1.0) for visibility.**
+2. **X-axis increases → moves right, decreases → moves left.**
+3. **Y-axis increases → moves up, decreases → moves down.**
+4. **Z-axis (3D depth, later for 3D shapes).**
+
+### **How to Decide Coordinates?**
+- Divide the screen into a **grid** where (-1.0, -1.0) is the bottom-left and (1.0, 1.0) is the top-right.
+- If you want a **larger shape**, increase the vertex values closer to -1 or 1.
+- If you want a **smaller shape**, keep the values between -0.5 and 0.5.
+
+---
+
+
