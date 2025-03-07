@@ -294,5 +294,162 @@ glEnd();  // End drawing
 - If you want a **smaller shape**, keep the values between -0.5 and 0.5.
 
 ---
+---
+---
+
+# **1. Transformations in OpenGL**
+Transformations allow us to **move (translate), rotate, and scale** objects in a 2D/3D space. OpenGL provides the following transformation functions:
+
+| Transformation | Function | Description |
+|--------------|----------------|----------------|
+| **Translation** | `glTranslatef(x, y, z)` | Moves an object along X, Y, Z axes |
+| **Rotation** | `glRotatef(angle, x, y, z)` | Rotates an object around an axis |
+| **Scaling** | `glScalef(sx, sy, sz)` | Resizes an object |
+
+These transformations modify the **model matrix**, affecting how objects are drawn.
+
+---
+
+# **2. Translation (Moving an Object)**
+Translation moves an object to a different position.  
+- `glTranslatef(x, y, z)`: Moves an object along the **X, Y, Z** axes.
+
+### **Example: Move a Triangle**
+```cpp
+glPushMatrix();  // Save the current state
+glTranslatef(0.5f, 0.5f, 0.0f);  // Move the triangle to (0.5, 0.5)
+glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0, 1.0, 0.0);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(-1.0, -1.0, 0.0);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(1.0, -1.0, 0.0);
+glEnd();
+glPopMatrix();  // Restore the previous state
+```
+🔹 The triangle moves **right (X=0.5) and up (Y=0.5)**.
+
+---
+
+# **3. Rotation (Rotating an Object)**
+Rotation spins an object around a specified axis.  
+- `glRotatef(angle, x, y, z)`: Rotates the object by `angle` degrees around the axis `(x, y, z)`.  
+  - `(1,0,0)`: Rotate around X-axis  
+  - `(0,1,0)`: Rotate around Y-axis  
+  - `(0,0,1)`: Rotate around Z-axis  
+
+### **Example: Rotate a Square**
+```cpp
+glPushMatrix();
+glRotatef(45.0f, 0.0f, 0.0f, 1.0f);  // Rotate 45 degrees around Z-axis
+glBegin(GL_QUADS);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(-0.5, 0.5, 0.0);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.5, 0.5, 0.0);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.5, -0.5, 0.0);
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glVertex3f(-0.5, -0.5, 0.0);
+glEnd();
+glPopMatrix();
+```
+🔹 The square rotates **45° around the Z-axis**.
+
+---
+
+# **4. Scaling (Resizing an Object)**
+Scaling enlarges or shrinks an object.  
+- `glScalef(sx, sy, sz)`: Scales the object along X, Y, Z axes.  
+
+### **Example: Scale a Triangle**
+```cpp
+glPushMatrix();
+glScalef(2.0f, 2.0f, 1.0f);  // Make the triangle 2x bigger
+glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0, 1.0, 0.0);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(-1.0, -1.0, 0.0);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(1.0, -1.0, 0.0);
+glEnd();
+glPopMatrix();
+```
+🔹 The triangle becomes **twice as large**.
+
+---
+
+# **5. Combining Transformations**
+You can combine **translation, rotation, and scaling**.  
+- **Order matters**:  
+  - If you **scale before translating**, the object moves differently than if you **translate before scaling**.
+
+### **Example: Move, Rotate & Scale a Square**
+```cpp
+glPushMatrix();
+glTranslatef(0.5f, 0.5f, 0.0f);  // Move right & up
+glRotatef(45.0f, 0.0f, 0.0f, 1.0f);  // Rotate 45 degrees
+glScalef(1.5f, 1.5f, 1.0f);  // Make 1.5x bigger
+glBegin(GL_QUADS);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(-0.5, 0.5, 0.0);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.5, 0.5, 0.0);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.5, -0.5, 0.0);
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glVertex3f(-0.5, -0.5, 0.0);
+glEnd();
+glPopMatrix();
+```
+🔹 The square **moves, rotates, and enlarges** in one step.
+
+---
+
+# **6. Animation with Transformations**
+We can animate objects by updating transformations in a loop.
+
+### **Example: Rotating Square Animation**
+```cpp
+static float angle = 0.0f;  // Rotation angle
+
+void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glPushMatrix();
+    glRotatef(angle, 0.0f, 0.0f, 1.0f);  // Rotate square
+    glBegin(GL_QUADS);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f(-0.5, 0.5, 0.0);
+        glColor3f(0.0f, 1.0f, 0.0f);
+        glVertex3f(0.5, 0.5, 0.0);
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glVertex3f(0.5, -0.5, 0.0);
+        glColor3f(1.0f, 1.0f, 0.0f);
+        glVertex3f(-0.5, -0.5, 0.0);
+    glEnd();
+    glPopMatrix();
+
+    angle += 0.5f;  // Update angle for next frame
+    glutPostRedisplay();  // Redraw screen
+    glutSwapBuffers();
+}
+```
+🔹 The square **rotates continuously**.
+
+---
+
+# **7. Summary**
+- `glTranslatef(x, y, z)`: Moves an object.
+- `glRotatef(angle, x, y, z)`: Rotates an object.
+- `glScalef(sx, sy, sz)`: Resizes an object.
+- **Order of transformations affects the result.**
+- **Use `glPushMatrix()` and `glPopMatrix()` to keep transformations separate.**
+- **Animating transformations** creates cool effects!
+
+---
+
 
 
